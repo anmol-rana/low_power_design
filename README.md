@@ -2,21 +2,66 @@
 # Table of Content
 ## DAY1
 * Why low power design?  
+  * Economics of Power/Energy
+  * Power vs Performance
+  * Portable vs Mobile vs Mobility
+  * Macro Prespective, EVS, Powergrids, ALtenate Energy
 * CMOS recap for labs
+  * Back to Basics, Resistors, Capacitors and Inductors
+  * MOS Transistors and CMOS
+  * CMOS operational region and 7 degree of Voltage control
+  * Range of Volatage controlled techniques
 * Case Studies   
-## DAY2 
-* Low Power Fundamentals   
+  * Reason of thermal runaway for samsung note 7 batteries
+  * Iphone 6 battery degradation
+## DAY2  
+* Low Power Fundamentals 
+  * Generic But Essential view of System and SOC
+  * Power Consumption Breakdown
+  * Low Power design vs Power Management
+  * Density vs Delivery
+  * Reliability, Leakage and Lifetime.
+  * System Level Consideration  
 * Voltage Control Techniques   
+  * Range of voltage control techniques
+  * Power gating, Retention, DVS and Low-vdd standby
+  * State Retention and Verification
+  * State Retention techniques and UPF
 ## DAY3
-* Deep Dive into State Space     
-* Basic multi-voltage terminology    
+* Deep Dive into State Space 
+  * Power state, state transition and state space verification
+  * Elements of low power testbench
+  * Basics of Island Ordering    
+* Basic multi-voltage terminology
+  * Fundamentals of Rails, Multi-vdd and Island
+  * Fundamentals of domain, well and MTCMOS power gating.
+  * Isolations and LKGS -avoid latches, avoid respin
+  * Parking, Level shifters and SRPG(State tetention power gating)    
 ## DAY4
 * Volatage aware booleans    
-* Power management and typical errors    
+  * Introduction to CMOS stages and Voltage aware booleans
+  * Multi Voltage case study with ngspice labs
+  * Example of core to pad multi voltage domain
+  * Labs
+* Power management and typical errors
+  * Common Power Management Schemes on ARM based SOC's
+  * Structural and Control Errors
+  * Voltage Scheduling Premature writes and Off Island Wakeup
+  * Conflicting Events, Bad Transitions and Intermediate states
+  * Unplanned state, Premature write and Multiple cpu    
 * Verifcation Strategies of MV designs     
+  * Low Power Management Verification
+  * Multi Voltage Coverage and Temporal Checks.
 ## DAY5
-* Island Ordering    
-* Mobile and Mobility   
+* Island Ordering  
+  * Principle of Island Ordering and Reasons for deadlock
+  * Off Island Wakeup
+  * Disjoint Island
+* Mobile and Mobility
+  * Introduction to mobile and mobility
+  * Infrastructure Needed for Mobility
+  * Mobile Transformtion 2005-2015
+  * Next Gen Mobile   
 
 # DAY1
 
