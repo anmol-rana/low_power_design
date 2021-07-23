@@ -2,7 +2,8 @@
 # Table of Content
 ## DAY1
 * Why low power design?  
-* CMOS recap for labs   
+* CMOS recap for labs
+* Case Studies   
 ## DAY2
 * Trepn Profiler   
 * Low Power Fundamentals   
@@ -217,9 +218,22 @@ Combinational          Sequential
 Applications where to use voltage controlled techniques.
 
 
-# DAY2
+## CASE Studies:-
 
-## Trepn Profile
+**Reason of thermal runaway for samsung note 7 batteries**
+
+Samsung used batteries from two parties one from samsung itself and another one from Amperex.
+
+In samsung batteries, there was not gap between the internals and heat sealed protective pouch around the battery. Due to the heating of the device, causes the electrodes inside the battery to crimp and causes weakning of the separators between electrodes and results in short circuits.
+
+In Amperex batteries, some cells were missing insulation tape and some cells having protrusions which leds to damage of the separator between the cathode and anode which results in short circuit. 
+
+**Iphone 6 battery degradation**
+
+For Iphone 6, the company updated the software which kills the speed of the iphone and results in slowing down of the phone. The Apple says they have done this to preserve the battery life of ageing phone. Law suit is filed for this incident.
+
+
+# DAY2
 
 ## Low Power Fundamentals
 
@@ -607,13 +621,147 @@ Low to high, high to low, iosls-> isolation + level shifting, bidirectional or a
 **SRPG***
 
 To retain the values of the logic when it is switched off, shadow latches are used. They  save the state of the logic and restore the logic when the logic is powered on. Why are latches used instead of flops?      
-1.	To save the logic to be overburdened with the number of transistors associated with the f.  
+1.	To save the logic to be overburdened with the number of transistors associated with the flops.  
 2.	Don’t want the large capacitor of ethe flip flop to drain out the retention element.   
 
 
 # DAY4
 
 ## Voltage aware booleans
+
+### Introduction to CMOS stages and Voltage aware booleans
+
+![curve_cmos](https://user-images.githubusercontent.com/86521351/126743934-c88d074e-8e9b-435a-9716-27c72ac0f428.PNG)
+
+1. When Vin =0, the pmos is in active region and nmos is in cut off region, so the output is Vout.             
+2. When Vin = vth, the pmos will going from active region to saturation and nmos from off state to saturation. Ouput is unknown. Also results in high leakeage current.      
+3. when VIn = 1, the pmos is off and nmos is on, output is vout.
+
+"Voltage Aware Boolean"
+
+![ex1](https://user-images.githubusercontent.com/86521351/126794645-fdae4e68-f12b-4455-897b-3ec39393d2a2.PNG)
+
+V1 and V2 are two supply voltages.
+
+Output of the first CMOS take as 1 and its eqivalent as 1= v1 in voltage aware boolean.
+Ouput of the 2nd CMOS is 1 @ V2. Logic needs to condidered with respect to V2
+
+
+### Multi Voltage case study with ngspice labs
+
+No level shifters are used. 
+Assume Vtn=Vtp=0.2v
+
+**Case 1:** when v1 = v2 -> works normally.
+**Case 2:** When V1 is off, output is at 1.
+**Case 3:** When V2 is off, output is at 0.
+**Case 4:** When V1= 1.0 and V2= 0.8
+
+![ex3](https://user-images.githubusercontent.com/86521351/126795837-3a166974-bf24-46e4-8292-0805b45bc9d4.PNG)
+
+When the output of first stage is at 1:-
+* Pmos of 2nd CMOS will be off
+* Nmos of 2nd CMOS will be super charged and heavy current will flow and increase power consumption
+
+When the output of first stage is at 0:-
+* Pmos will be one and output will v2
+* Nmos will be off
+
+**Case 4:** When V1= 3.0 and V2 0.8
+
+![ex2](https://user-images.githubusercontent.com/86521351/126796568-5841bafb-dd7c-4f09-b23d-eedb653f472a.PNG)
+
+
+When the output of first stage is at 1:-
+* Pmos will be off
+* Nmos will be on and super chagred. Too much step down in voltage results in power lose.
+
+When the output of ist stage is at 0:-
+* Pmos will be one and output will v2
+* Nmos will be off
+
+Assume a scenario where due to gnd debouncing the v1 is not 0 when voltage lies in (0 to 0.9).
+* Pmos will be become off.
+* Nmos will become on, the output will become 0 when the desired is 1.
+
+
+**Case 5:** When V1=1.0 and V2=1.2
+
+![ex4](https://user-images.githubusercontent.com/86521351/126797753-d710391c-1662-486d-8107-e65191ee6bd5.PNG)
+
+
+When the output of first stage is at 0:-
+* Pmos will be one and output will v2
+* Nmos will be off
+
+When the output of the first is 1 with voltage range(0.9 to 1.1)
+V1 = 0.9, the output will be 0.
+V1 = 1.0, the output will be 0.
+V1 = 1.1, the output will be meta stable.
+
+**Case 6:** when V1=1.0 and V2=1.5
+
+When the output of first stage is at 1:-
+* Output will be metstable.
+
+When the output of ist stage is at 0:-
+* Pmos will be one and output will v2
+* Nmos will be off
+
+
+### Example of core to pad multi voltage domain
+
+When V1= 0.8 and V2=3.0
+
+![ex1](https://user-images.githubusercontent.com/86521351/126798301-9a6e0fef-cb29-4bcf-a0e6-76fdee6eb2b2.PNG)
+
+When the output of first stage is at 0:-
+* Pmos will be one and output will v2
+* Nmos will be off
+
+When the output of the first is 1 with voltage 0.8
+* it lies between off region and saturation region of pmos. The output can be 0 ,1 or X
+
+
+### Labs
+
+**Inverter**
+
+![inversion_circuit](https://user-images.githubusercontent.com/86521351/126791438-249a6dea-d908-4819-8d1d-605a2427130c.PNG)
+Inversion circuit
+
+
+![inversion](https://user-images.githubusercontent.com/86521351/126791292-975f13a6-fb43-4690-8c89-f7d4d99c08bc.PNG)
+
+In the above waves:- 
+* the read circles show wrong output, i.e input os 1 and output is also 1.
+* Purple line:- the output somewhat following as expected.
+* Green circle:- Output as the expected one. 
+
+
+
+**Nand gate**
+
+![image](https://user-images.githubusercontent.com/86521351/126791046-041021d6-7c87-4719-b728-b46af1084fe7.png)
+
+circuit of nand gate.   
+
+![image](https://user-images.githubusercontent.com/86521351/126791069-aea18792-dbc1-4a8e-87b2-1bfd91450e15.png)
+
+**Shift Register**
+
+![image](https://user-images.githubusercontent.com/86521351/126791159-ab249024-3afa-4e30-951c-2783adf17341.png)
+Circuit of shift register.
+
+![image](https://user-images.githubusercontent.com/86521351/126791230-ec77edbe-3267-42fb-8b53-1c2b516b556f.png)
+
+A&b is f(a,b) but in reality it is f(a,b,v1,v2,v3)
+V1-> and gate voltage, v2 & v3 is signal voltage
+Power Management and Typical errors
+
+
+
+
 
 ## Power Management and Typical Errors
 
@@ -863,7 +1011,63 @@ It may also lead to insert between them bidirectional level shifters.
 Static check tools usage.
 
 
+![image](https://user-images.githubusercontent.com/86521351/126783625-9c618a76-4a55-4ee5-83ff-3ca3c9bb7c9c.png)
 
+ usage of island ordering theorem for legacy design.
+ 
+ **Beware of Software Dependencies*
+ 
+ * Software can place a block in standby/off state and then read that register somewhere else. Read will return isolated or parked value.
+ * Software must maintain a consistent view of unavailable resources.
+
+
+## Mobile and Mobility
+
+### Introduction to mobile and mobility
+
+Mobility refers to migration of services from a fixe location. Eg usage of mobile payments rather than going to banks and post office for the payment transfer.  
+
+Mobile enables data whereas mobility generates data and also used the data created by mobile applications like Instagram, whatsapp, gps data etc.   
+Infrastructure needed for mobility.   
+
+**Mobile can break mobility**
+
+* Instagram without good front facing camera. 
+* Swiggy, zomato without GPS.
+* vedio streaming without 4g/5g
+
+### Infrastructure Needed for Mobility
+
+![image](https://user-images.githubusercontent.com/86521351/126787788-61338c48-ea61-400d-9c11-60933d8df114.png)
+
+* Smartphone with hardware features enabled like GPS, 4g/5g
+* OS and programming model -> operating system and ease of running programms
+* App development -> Ease of deveoplment of apps for the Os platforms
+* Cloud site development -> where the user will interact with this apps.
+* Security -> protecting the data like online payments.
+* Storefront -> Service reaching to service provider.
+* Critical mass of users -> Number of users.
+
+
+### Mobile Transformtion 2005-2015
+
+![image](https://user-images.githubusercontent.com/86521351/126789263-38691bc5-08c1-4e43-b3f5-9337ce504cf3.png)
+
+
+Functional Accuracy:- Depends upon the device for providing accurate results. 
+
+Aggregation of sw/hw :- How well the software and hardware integrate.
+
+Apps/Analytics:- Apllications feeds hw/sw changes.
+
+### Next Gen Mobile
+
+![image](https://user-images.githubusercontent.com/86521351/126790076-6891de28-038d-4eb2-989a-3ee72aef1dc2.png)
+
+Medical is the next generation mobile.
+
+
+  
 
 
 
