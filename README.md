@@ -54,8 +54,9 @@
   * Multi Voltage Coverage and Temporal Checks.
 ## DAY5
 * Island Ordering  
+  * Introduction to Island ordering
   * Principle of Island Ordering and Reasons for deadlock
-  * Off Island Wakeup
+  * Off Island Wakeup and Extension of island ordering
   * Disjoint Island
 * Mobile and Mobility
   * Introduction to mobile and mobility
