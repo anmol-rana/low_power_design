@@ -301,8 +301,7 @@ Eg register files, ram, gates
 **Delivery**
 * delivery is defined as the source will be able to provide continous current with handling fluctuations.
 
-![deep](https://user-images.githubusercontent.com/86521351/126750845-d3e61796-5432-4389-bfee-f01943e4c354.PNG)
-
+![image](https://user-images.githubusercontent.com/86521351/126768292-33fd8f38-95cb-4c2b-990c-cef281cc144a.png)
 
 
 ### Reliability, Leakage and Lifetime.
@@ -434,6 +433,445 @@ state retention power gates requires special control sequences like defined abov
 
 
 # DAY3
+
+## Deep dive into state space
+
+### Power state, state transition and state space verification
+
+
+**Need Dynamic power intent Verification**
+* Power bugs cannot be checked statically. Dynamic verification is needed for issues defined below: -
+* Power on reset.
+* Power state transition 
+* Functional corrections of the state transition.
+* State retention 
+* Power management firmware
+* Isolation gate on & off
+
+**Mode State Space**
+
+![image](https://user-images.githubusercontent.com/86521351/126768679-8ec9c426-dea9-481e-a698-30a633fc065a.png)
+
+Operational state of normal phone device which can make call, play videos and display images.
+
+**Power State Space**
+
+![image](https://user-images.githubusercontent.com/86521351/126768735-cdea8978-d79c-4181-a4b0-19f66d17bd3d.png)
+
+**Ideal mode:-** CPU and modem are in standby mode means they need to retain the states whereas the display, audio and videos are in off mode means they are not required to save their states.      
+**Phone mode:-** the CPU is in normal mode, audio is in normal mode, modem is in normal whereas display and video will be in off state.            
+**Media mode:-** cpu in high performance, display in normal state whereas  audio, modem and display are in off mode.               
+
+![image](https://user-images.githubusercontent.com/86521351/126768917-eb00d4a9-e27e-4eaa-ae42-0605f53d333b.png)
+
+Scenario when a call happens while displaying the image. Power states of various functional blocks need to be change.
+CPU: - HP -> normal
+Modem:- off to normal
+Audio: - off -> normal
+Display:- normal -> off
+A lot of issues can occur during this switching which needs to be verified dynamically.
+
+**Power State Transitions**
+
+![image](https://user-images.githubusercontent.com/86521351/126768987-de693109-7d0d-4d19-9256-0edaa7c3c2a7.png)
+
+Power state transitions is the transition of power states from one mode to another mode.
+
+**Power state verification: -**
+Switching of power states when blocks are transitioned to different functionalities according to the application.
+State spaces are too large. It will be impossible to verify them and predict the functionality. So this spaces is constrained by the firmware. Firmware constrained the spaces with the help of specific sequences.
+
+
+### Elements of low power testbench
+
+![image](https://user-images.githubusercontent.com/86521351/126769273-c0fe4502-847b-4ffc-8688-7e15688ed2aa.png)
+
+Pwr management:- block which control power aspects of the other blocks.
+
+**Things to verify:-**
+* Verify all on state -> all the components are enabled.
+* Verify all power mode of blocks -> off -> standby(if support) -> operational -> high performance(if any)
+* Verify wakeup when all are ooff. Are all island covered for o/off/dvfs
+* Verify power management unit firmware.
+* Verify the retention aspects of registers and memories.
+
+**Note:-** In emulation, it can’t simulate shutdown easily.
+
+
+## Basics of Island Ordering
+
+power states of a block is called island.              
+Island ordering is the order in which the power state of various block will undergo transition in defined manner. 
+
+![image](https://user-images.githubusercontent.com/86521351/126776395-2ff00353-10d6-4474-85cd-3d5aebda5430.png)
+
+
+Eg:- In the above diagram, the modem is moving from off to standby, at the same time cpu is moving from hv to standby state.    
+The order which power state transition will go first it the modem going from the standby to off or cpu moving from high processing to standby state. This is known as island ordering.     
+
+**Why we need it.**
+
+![snip](https://user-images.githubusercontent.com/86521351/126776516-dec01fed-6314-4a29-bb54-beb569e218da.PNG)
+
+There are some signals sig1 and sig2 going from cpu to modem or vice versa. When the power states of the blocks transitions than this signal create problems.  We need to have protection circuitry for such signals.    
+
+Island ordering is ordering between power states of different blocks. This is controlled by the firmware and comes in architectural category. Voltage sensing, voltage regulators are also required to carry out the ordering.  Some library does support the power transition on a signal, caution to taken for such cases.     
+
+
+## Basic Multivoltage terminology
+
+### Fundamentals of Rails, Multi-vdd and Island
+
+#### Basics of multi voltage terminology
+
+![image](https://user-images.githubusercontent.com/86521351/126776789-fa1602b3-be31-4614-b67f-26ef374cefb7.png)
+7 rail model of cmos logic  
+
+**Rails**
+
+Rails are the output from the voltage sources like voltage regulator(voltage dropout or switching regulator), battery ,charge pump or virtual rail or derivative of another rail.  Rails are the voltage lines used to driver signals.             
+Power planes are also rails which connect various blocks on a board.               
+
+**Multi-vdd**
+
+
+![image](https://user-images.githubusercontent.com/86521351/126776909-f5b4a427-c132-49ce-98e8-a547a1195b4a.png)
+
+Various blocks of the chip driven by different rails are known as multi vdd design.
+
+**Island**
+unique area of the die connected to set of rails. If even one of the voltage from 7 rails of cmos changes than it will be considered as different island.   
+
+**Spatial variation: -** variation of voltage in blocks(driven by same voltage) present in different location of a die are known as spatial variation. Like one block is off and other one is enabled. 
+**Temporal variation:-** when clock are on or off in the same block are known as temporal variation
+
+### Fundamentals of domain, well and MTCMOS power gating.
+
+**Domain**
+
+![domain](https://user-images.githubusercontent.com/86521351/126777315-89c10e45-13fd-4e0e-83dc-cfb5da8847de.PNG)
+
+Domain is the drain of the driver. Voltage(v1) driving a various signal which makes logic 0 and 1. These all signals will be considered in V1 domain.   
+
+**Well**
+
+![image](https://user-images.githubusercontent.com/86521351/126777395-c3f82c0b-ff92-44e8-bc78-e2aefd833092.png)
+
+In the above diagram, logic, cache and register file are on the same domain because the same vdd is applied. Cache and register file are different island because they have variations in the back biasing.   
+Now in logic side power gating is used where no power gating is used on the cache and register file in order to retain the state. Now the logic and (cache and register file) are on different well.  
+
+
+**MTCMOS Power Gating**
+
+
+Multi threshold cmos used to gate the logic. Basically, it is of two types. Header and footers which are MTCMOS with high voltage threshold value to control the leakage current.
+
+Two variations:-
+1.	The power gate is on by the signal coming from the block.   
+2.	The power gate is switched on by the charge pump with value Vdd+0.2 say. This one is not used widely because of extra cost of charge pumps in layout but these results in significant reduction in leakage current.    
+
+
+### Isolations and LKGS -avoid latches, avoid respin
+
+**Isolation**
+
+![image](https://user-images.githubusercontent.com/86521351/126777631-36bd7a8d-e4c2-4030-9394-a466a6c32993.png)
+
+Say there are two blocks, a signal is connected from one block to another.   
+If one block is powered down, the output from that block will go into high impedance ‘Z’ state. As this signal is fed to the other block as input, logic depending on this signal will get corrupted and the results in more power wastage.    
+In order to overcome this issue, the outputs from the block which is powered down will be made 0 with help of gates like and ,nand, or etc. this is known as isolation.    
+Sometimes pull up and pull down are used to make the signal 0 but it’s better to avoid them due to variation in current it may create issue and difficult to verify in dft.    
+
+**LKGS**
+
+LKGS:- latch based last known good state and it is also a isolation and retention technique.
+
+This technique uses a latch to store the last known good value of the output from the block which is powered down. But architectural this is a good technique but avoid this from being used as it may results into respin and it also difficult to verify this. Always avoid latches in the design.    
+
+### Parking, Level shifters and SRPG(State tetention power gating)
+
+**Parking**
+
+![image](https://user-images.githubusercontent.com/86521351/126777977-e1226a84-7a9e-4b0e-8673-8d3845dfae19.png)
+
+Parking is used to make the value of the output signal to 0 or 1 when the driver block is powered on and receiver is powered off. If the output signal is not parked, the block which is input this signal is powered off. So due to large capacitance and fan in results in loss of power.   
+Parking gates saves power and avoid level shifters.        
+
+**Level Shifters**
+
+When the blocks are on different voltage. A level shifter is used to shift the voltage up ond down according to the domain of receiver block.
+Types of shifters:-
+Low to high, high to low, iosls-> isolation + level shifting, bidirectional or auto level shifters.
+
+
+**SRPG***
+
+To retain the values of the logic when it is switched off, shadow latches are used. They  save the state of the logic and restore the logic when the logic is powered on. Why are latches used instead of flops?      
+1.	To save the logic to be overburdened with the number of transistors associated with the f.  
+2.	Don’t want the large capacitor of ethe flip flop to drain out the retention element.   
+
+
+# DAY4
+
+## Voltage aware booleans
+
+## Power Management and Typical Errors
+
+### Common Power Management Schemes on ARM based SOC's
+
+![image](https://user-images.githubusercontent.com/86521351/126778554-15f2f7f7-c10f-48c2-aec6-98cba1265b6f.png)
+
+**Power management schemes**
+* Blocks(islands) which can be controlled independently .
+* Voltage regulators/power switches.
+* Power management contoll unit .
+* Software driver for power block unit
+* Hardware and software input to pmu 
+
+**Example of Smart phone wakeup**
+* Hardware wakeup: button press results in wakeup of keyboard, display etc.   
+* Software initiated wakeup: like alarm clock.       
+* H/w and s/w interplay with each other.           
+* Many processes run in parallel.           
+
+### Structural and Control Errors
+
+**Powe Management issues:-**
+* Isolation/level shifting bugs -> missing isolation or parking circuits from when blocks are on/off. Level shifting of signals when blocks in different domain.    
+* Control sequencing bugs-> control orders in which the different island or power states of different islands need to power up/down.   
+* Retention scheme/control bugs -> related to usage of retention circuit or save/restore control signals used in retention circuits.     
+* Retention selection errors -> when some registers are missed to retain.           
+* Electrical problem like memory corruption.        
+* Power sequencing/ voltage scheduling errors -> related to island ordering problems.     
+* Hardware and software deadlock: - emulation can help to resolve this issue.           
+* Power gating collapse -> powered off to past, powered off without reset, powered off without retention.     
+* Power on reset/ bring up problems -> number one problems results in chip failures. Difficult to debug. By using voltage aware Booleans.     
+* Thermal runway/overheating. Thermal aspect can not be modeled but thermal runway due to h/w and s/w deadlock can be modeled.     
+
+**Power Bug Classification:-**
+
+**Structural Errors:-**  We do need to provide any vectors so these can be verified with the help of static checks
+* Missing isolation/level shifters.
+* Device in wrong domains.
+* Wrong rail connection .
+
+![image](https://user-images.githubusercontent.com/86521351/126779075-60f61222-c5cc-4602-b1be-3438a1c1af63.png)
+
+Whenever the netlist is change, need re run the power static checks.
+
+**Control erros:-**
+* related to signals which controls triggering of low power circuits
+* Missing control signals for isolation cells.
+* Incorrect control activation sequence.
+* Incorrect gating/ungating in off/low power states.
+
+![image](https://user-images.githubusercontent.com/86521351/126779531-7b46c2f2-0f41-42d4-b304-1548d877d126.png)
+
+In the snippet, when the sleep signal goes low, the iso signal is at x due to which the d_out signal is also at x. these needs to 0.   
+When the sleep signal again goes high, the value of accum_out is low, means reset is not happened before the block is powered on.    
+When the block is powered on ,the  clock is enabled after a long time.    
+
+**Architectural errors:-** 
+* Incorrect partitions policies.
+* Incorrect scheduling of resources.
+
+### Voltage Scheduling Premature writes and Off Island Wakeup
+
+**Voltage Scheduling**
+
+![image](https://user-images.githubusercontent.com/86521351/126779775-8eda72a8-2d4d-489c-b3e9-b992e42c1cc4.png)
+
+In this scenario, two islands are at 1.2v and 1.1v. We see statically blocks does not require any level shifting but in dynamic situation may create problem. Consider to island 1 is a big block and takes more time to power up whereas the island 2 is small block when can power up quickly. This kind of problem occurs when the signals from to and from island 1 and island 2 are changing simultaneously due to change in area and time. TO avoid this problem rails driving the signal should not change simultaneously.   
+
+**Premature Write**
+
+![image](https://user-images.githubusercontent.com/86521351/126779825-3ab7c770-58c7-4154-8580-b3125b3395c7.png)
+
+In the above scenario, after hibernation the clock is enabled, and the voltage is in ramping state (not stable). This results into reg values being driven at unknown state which is not the desired one. This will not get caught in regular simulation.  
+
+
+**Unsafe Memory Write**
+
+![image](https://user-images.githubusercontent.com/86521351/126779887-868fd5df-c463-4a1c-96aa-af9995f61d1f.png)
+
+In this scenario, the flop is being written when the vdd is at value than threshold value. This will results in unknown value gets stored in flop.  
+
+
+**Off Islands for Wakeup**
+
+![image](https://user-images.githubusercontent.com/86521351/126779965-990fcc68-5066-4722-b8c0-1a5ff9d84cb4.png)
+
+In this case, the rst logic is using RSTTEST signal from the digital block. This digital on/off state is controlled by the output from this rst logic. So caution to taken to ignore the value of RSTTEST signal when block(digital off). Otherwise it may create a loop. Where the on condition of block(digital ) may depends upon the  RSTEST signal which is in turn is isolated.   
+
+### Conflicting Events, Bad Transitions and Intermediate states
+
+**Conflicting Events**
+
+![image](https://user-images.githubusercontent.com/86521351/126780147-4cf09d6b-82eb-4c10-9559-8ea61fbc4cdb.png)
+
+In this scenario, block detected  thermal overheat(with help of thermal diode present in die or outside of the system) detected high temperature, this blocks wants the cpu to turn off the blocks systematically but at the same time the cpu is in sleep state means its clock is gated hence the block with high temp information will not able to make the cpu to switch the blocks as result the heat of the system will rise and may result into burning of the device. If we forced shutdown, device may results in unknown output which may create dangerous situation like the safety bag of the car will be opened when there is not need.   
+
+**Bad Transitions**
+
+![image](https://user-images.githubusercontent.com/86521351/126780216-fcfc7604-b30e-483d-90da-841e474fbf4e.png)
+
+In this scenario, P1 and P2 are the desired transitions with P1 state at  v1 == v2 and p2  at v2 >= v1. The v2 switches fast and v1 switches slow. So a third intermediate state is develop where P1> P2 which is not required.  To avoid this kind of issue, do not simultaneously change power rails or transition the v2 first than the v1.   
+
+
+### Unplanned state, Premature write and Multiple cpu
+
+**Unplanned State**
+
+![image](https://user-images.githubusercontent.com/86521351/126780374-7bd21905-3724-4388-aaaa-3613db4f0928.png)
+
+This is nasty bug which occurs in power domain. Say V1 is connected to power gated cmos and it connected to another big block. When the big block moves from off to on state. The V1 momentarily falls, and rise called excursion. As v1 is connected to another block which is in off state may become one for some. This type of issues do not get detected easily.   
+
+**Premature Write**
+
+![image](https://user-images.githubusercontent.com/86521351/126780420-60103e58-9444-491b-8d3f-c2a7f98baf21.png)
+
+The restore is active before the power gated voltage is stable. This will results in registers restored to unknown values as sensing voltage readiness is tricky. Very difficult to avoid this kind of problem.    
+
+**Multiple CPU**
+
+![image](https://user-images.githubusercontent.com/86521351/126780511-03e36b16-e6f8-44bd-90ff-84e688c71ef7.png)
+
+
+## Verification Strategies of MV Designs
+
+### Low Power Management Verification
+
+Two types of verification used for power verification.
+1.	Voltage aware Boolean verification (electrical accuracy)
+2.	Hybrid (static-dynamic approach) for complex designs.
+
+![image](https://user-images.githubusercontent.com/86521351/126780607-f01a5165-29ee-4033-be04-fc797cd3e00e.png)
+
+Traditional verification are based on single vdd designs. They are designed for mulitplte vdd designs. No logical simulation when the chip is powering on.   
+
+
+![image](https://user-images.githubusercontent.com/86521351/126780635-3d133794-3428-4077-9fb8-a8a8f6dd0ff1.png)
+
+![image](https://user-images.githubusercontent.com/86521351/126780656-108b1c4c-7db7-45eb-a919-3c87d6b3e5c2.png)
+
+![image](https://user-images.githubusercontent.com/86521351/126780771-7e72dbdc-435b-457f-a151-518ff2f4b76b.png)
+
+
+![image](https://user-images.githubusercontent.com/86521351/126780781-d591a9da-27bd-4279-a604-e794a5c9c3c9.png)
+
+
+Multi fan issues -> when a block is connected to other different blocks some of which requires clock gating or level shifters.  
+
+
+![image](https://user-images.githubusercontent.com/86521351/126780888-6e1ea0b8-f60f-400e-9ee1-8d2fe31a8bb6.png)
+
+This snippet shows the complexity of increase in verification when the power management increases.
+
+### Multi Voltage Coverage and Temporal Checks.
+
+![image](https://user-images.githubusercontent.com/86521351/126781059-b8ed457a-a021-49e3-a328-1d9051ce564e.png)
+
+Snippet showing the coverage required for power verification of multi vdd designs.
+
+![image](https://user-images.githubusercontent.com/86521351/126781096-4432b2fc-9f6e-4dd7-9388-67e85b8dc7ec.png)
+
+Typical verification flow for low power.
+
+# DAY5
+
+## Island Ordering
+
+* Mathematical concept of spatial and temporal dependencies.
+* Imposes restrictions on spatial cconnectivity based on temporal states or vice versa.
+* used to predict power sequences for wakeup/shutdown.
+* used to statically detect dependencies that lead to deadlock.
+* applies to software and hardware to detect.
+* Can be extended marginally to DVS states but use with caution. 
+
+![image](https://user-images.githubusercontent.com/86521351/126781716-c6e2c00a-acdd-4798-beeb-fc5ae236c9e9.png)
+
+Island issue Example: In the above snippet, the clock of FSM and D-reg in Island-2 clock is controlled from the island-1 block. When the island-1 is powered off, the clk will be in zero state due to isolation cell and hence the FSM and D-reg will lose their clock. This is not a good design behavior. Fam and d-reg should be in same domain as island 1. Even if the design wants the same circuit as shown in the snippet. It will result into more dynamic and leakage power.  
+
+![image](https://user-images.githubusercontent.com/86521351/126781751-78a3b985-28f4-46eb-b6dc-781144952118.png)
+
+In this circuit the isolation gate signa is buffered in island1 due to some mistake. This will result in chicken egg problem.
+
+### Principle of Island Ordering and Reasons for deadlock
+
+**Principle of Island Ordering**
+
+* If Island A is relatively more on than island B, then A > B and No state exist where B is on and A is off.
+* If A=off, B==on and A==on , B==off are both possible, then A and B are disjoint.
+* If A and B are identical on/off all the time, they are equivalent.
+
+Voltages level may be different
+
+Voltage may different, like one is at voltage 1.0v and other one is at 1.2v
+Low vdd standby is the state where circuit is on but not operational.
+
+Now if take standby operation into consideration than 
+On > standby > off
+
+Island A > Island B iff state(A) > state(B) all time 
+State A              state B
+On                      on
+On                      off
+On                      standby
+Standby                 off
+Off                     on   (Not exists)
+
+
+Example:- 
+
+![image](https://user-images.githubusercontent.com/86521351/126782700-c075a490-99d2-4160-ac13-c51d816dc9fd.png)
+
+Pay special attention to island which have some greater than and less than relationship  because they are island which will be having some signals passed between them.
+More connectivity islands have in-between them, more chances to find >/< relationship between them.   
+
+![image](https://user-images.githubusercontent.com/86521351/126782730-6979196d-f347-4184-b047-5d1e87db2237.png)
+
+**Note:-** if some signal is required to higher island order. It should be properly documented.
+
+**Deadlock**
+
+
+![image](https://user-images.githubusercontent.com/86521351/126782815-bcd877d1-b758-4062-bca2-2864bcebdaea.png)
+
+Example of deadlock when signal is passed from low level island to high level island.
+
+
+### Off Island Wakeup
+
+![image](https://user-images.githubusercontent.com/86521351/126782911-2c2eacd6-bb2a-41a0-9448-5b6db14dce81.png)
+
+RSTTEST signal is used indirectly to wake up block(DIGITAL)     
+When the digital block is off, we do not know how the rest of the logic behave.   
+When its own, we don’t know the validity of this signal.      
+It’s like block is resetting itself. This kind of scenario is required when the power level  is detected by power sensor higher than the required , then go into off state
+
+
+### Disjoint Island
+
+![image](https://user-images.githubusercontent.com/86521351/126783051-9c26946f-667d-41f7-bdd2-83b47dca43c1.png)
+
+It may also lead to insert between them bidirectional level shifters.
+
+**Architectural checks**
+
+![image](https://user-images.githubusercontent.com/86521351/126783266-e3f7beed-0db0-4d8d-ba9b-fe956da31a7b.png)
+
+Static check tools usage.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
