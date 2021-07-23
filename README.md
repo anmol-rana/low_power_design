@@ -221,6 +221,224 @@ Applications where to use voltage controlled techniques.
 
 ## Trepn Profile
 
+## Low Power Fundamentals
+
+### Generic But Essential view of  System and SOC
+
+**Power Equation**
+
+![cmos_eq](https://user-images.githubusercontent.com/86521351/126748810-673a05dd-aacf-4bc7-8411-1ca543560291.PNG)
+
+Power highly depends upon the voltage. Power is leakage power + dynamic power.
+
+![ess_view](https://user-images.githubusercontent.com/86521351/126749282-7c51b541-22b6-48cf-a2ec-46a52b264e05.PNG)
+
+Application is actually some signal moving from one location to another      
+Like if we want to see a picture, first it will be fetched from storage and then displayed on the screen.    
+
+**Systemic activity which generates ic movements: -**
+* Human invoking apps.
+* Background os activity
+* Periodic activity. Syncing of mails
+* Network traffic 
+
+**System:-**
+* Human interface like display
+* Software:- apps
+* Operating system:- manages different software
+* Scheduler:- manages which block to active or disable.
+* HAL-> hardware abstraction layer
+* Hardware resources
+
+
+### Power Consumption Breakdown
+
+![chip_renesas](https://user-images.githubusercontent.com/86521351/126749615-2a6e7f2d-3f16-44b9-a7a6-4f0c5bf6fced.PNG)
+
+A classic example from Renesans for low power design.               
+
+**Power Management**
+1.	System are not needed to  have same performance all the time              
+2.	Systems are not required to run all the functions at the same time.            
+3.	Operating at the worst corner case all the time is wastage.              
+4.	Running all the blocks at all time is also a wastage.           
+
+**Some Rules:-**
+
+**Off by default rule**
+* Turn on the blocks when they are required.              
+* Turn off them when there is no need of the block.             
+
+**Lowest possible voltage**
+* Always apply the minimum voltage to a block which is required to keep it functional or workable at a desired frequency at each instant of time.             
+    
+For a effective design, it requires all the way information from the device physics to software.               
+For eg, in devices sides, CMOS are required for gating off the device and when a block’s voltage is scaled down and CPU must keep track status of the block i.e what is its voltage and how much time it will take to again wake up the block through voltage regulator.                               
+
+### Low Power design vs Power Management
+
+**Low power design**
+* Reduce the power of the component.                
+* Efficient components.              
+Eg register files, ram, gates
+
+**Power management**
+* Focus on the system point of view.             
+* Hardware and software involvement.            
+* Manage power and performance.           
+* Manage resource availability.            
+* Manage the lp design through the hooks provided to it.             
+
+
+### Density vs Delivery
+
+**Density**
+* defined as power/area.   
+* Heat is direct consquences of density.   
+* power consumed is function of junction temperature.  
+
+
+**Delivery**
+* delivery is defined as the source will be able to provide continous current with handling fluctuations.
+
+![deep](https://user-images.githubusercontent.com/86521351/126750845-d3e61796-5432-4389-bfee-f01943e4c354.PNG)
+
+
+
+### Reliability, Leakage and Lifetime.
+
+![leakage](https://user-images.githubusercontent.com/86521351/126750986-c1615a3f-bd48-4572-a0e4-a37633dad3ef.PNG)
+
+**Reliability(Lifetime):-** How much the system reliable and liftime of the device
+
+**Leakage:-** The leakage current depends upon the states of the device and results in huge power loss.
+
+
+### System Level Consideration
+
+* Power x time -> battery life/energy life.
+* Average power/Peak sustained -> Heat -> package/cooling.
+* Peak power -> delivery -> VR selection, power grid design.
+* Peak di/dt -> delivery -> VR selection, power grid design.
+* Leakage -> Thermal runaway, battery life.
+* Average Power -> reliablity -> wire width -> capacitance , speed fall
+* Peak sustained ->self heating -> fusing -> wire width -> capacitance rise, speed falls
+
+## Voltage Control Techniques
+
+### Range of voltage control techniques
+
+![voltage_control](https://user-images.githubusercontent.com/86521351/126754949-fc44c61d-5d6f-426d-8942-38bef3579621.PNG)
+
+1. SLPP:- Also termed as header gate which is used for power gating the logic below it.
+2. SLPN:- Also termed as footer gate which is also used for power gating.
+3. VDD:- It is the drain voltage used for voltage scaling to reduce the power.
+4. VSS:- source voltage 
+5. VBBP:- back biasing for pmos to reduce the leakage current by increasing the threshold of p substrate.
+6. VBBN:- back biasing for nmos to reduce the leakage current by increasing the threshold of n sunstrate.
+7. VRET:- Retention voltage used to retain certain logic when the logic is powered off.
+
+
+### Power gating, Retention, DVS and Low-vdd standby
+
+**Power gating**
+
+![image](https://user-images.githubusercontent.com/86521351/126755159-9d988047-ae7a-40d8-a9de-a260ebc3e72e.png)
+
+Power gating is used to shutdown the logic for some time in order to save power. This is done by using SLPP(header gate) or SLPN(footer gate). Mostly SLPN is used. Thing to keep in mind, the output from the gated block should always be isoltaed othwerwise when the block will be powered off the output goes into high impedence and result in large leakge current and power loss.
+
+**Retention**
+
+![image](https://user-images.githubusercontent.com/86521351/126755830-0a130457-4e61-451d-b64b-b90062328dfa.png)
+
+Retention is used along with the power gating and it used to retain the state of logic before the logic is shutdown and it will get restored once the logic is powered on. 
+
+
+**Dynamic Voltage Scaling**
+
+![image](https://user-images.githubusercontent.com/86521351/126755880-7ff85f61-6e68-4e8c-99c3-06ddca3f3959.png)
+
+DVS technqiue is used to reduced the power with the help of level shifters when the blocks are different voltages and there are some signals routing between them.
+
+**Low-vdd Standby**
+
+![image](https://user-images.githubusercontent.com/86521351/126756591-a87f7cbb-fe6d-4f70-8765-7ccf80aa4526.png)
+
+This is used to reduce the power by lowering voltage such the gates will be in standby modes mode. The voltage will retain its value but the circuit will not be active.
+
+
+### State Retention and Verification
+
+**When and Why State Retention Matters**
+
+* It is used with power gating. Power gating is used to reduce the leakage current. Sub-system power will be cut off and it will loose its state. It will require all the register to re-initialized on re-power up.
+* State retention is not required for the blocks which only process the input data.  
+* Many peripherals and CPU requires the context which is acquired from the other resources. Re-acquiring will require alot of time and cost. For such scenarios we need to retain the data.
+* But data store and restore has cost associated with it like increse in area to add retention cells, standby/wakeup response latencies.
+
+**Retention Strategies - Software/Hardware**
+
+* operating system should be aware about the power states of the blocks.
+* CPU excutes architectural state save code.
+* Wake-up via reset entry to restart code.
+* hardware power states should be transparent to OS.
+* all registers replaced by the retention registers.
+* scan-based hybernate: reuse scan chain to shift out/in.
+* voltage scale ,body biased and registers techniques used along with retention.
+* require a defined sleep/wake request protocol.
+
+**System level state reetention verification challenges**
+
+* when it is safe to stop and request state saving mode. It can be done internal or external sleep/wake interface is required. All transactions are complete on external interface. state of the clock enable signal.
+* Retained state integrity is 100% or not? If the any bit of the retained state is corrupted it may leads to deadlock. Design has any mechanism to counter this deadlock like watchdog timer.
+* When it is safe to restore state. Interlocks to ensure gated power rails are stable and safe. Clock enable signal is stable or not.
+* Power on reset initializaiton overides the retained states or not.
+
+**Understanding deep and shallow state**
+
+Shallow State:-
+* Standard registers have shallow state. They are simple master/slave latch structure.
+* Scan-tests are typically built to test this behaviour.
+* Retention latch structures like High-vt "ballon" or live-slave implementations
+* Reflects teh state of last write.
+* Easy to verify them.
+
+Deep State.
+* term used for memories.
+* dense 2 dimensional structures.
+* significant cost in copying/restoring.
+* reflects the history of all writes.
+* Maybe need to refresh the content.
+* Difficult to verify.
+
+
+### State Retention techniques and UPF
+
+**RTL and Implicit Retention**
+
+![image](https://user-images.githubusercontent.com/86521351/126766858-df846fcf-8d33-4789-b540-c57d4e9368eb.png)
+
+**State Retention and UPF**
+
+* UPF allows highly flexible(and dangerous) inference of retention states.
+* Safe options -> all state or not state.
+* to check for deadlock and interaction between non reset state interaction.
+* Clock gates have internal states as well.
+
+**SRPG Control Sequencing**
+
+![image](https://user-images.githubusercontent.com/86521351/126767641-6039bebd-a289-40fc-bb5c-59b5ba7168d4.png)
+
+
+state retention power gates requires special control sequences like defined above. This squences may vary depending upon the library. One thing to keep in mind, always use power reset to go into sleep and also during wakeup so that the states will not have undefined values. Always take care to save/restore with respect to power reset.
+
+
+# DAY3
+
+
+
+
+
 
 
 
