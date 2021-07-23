@@ -4,8 +4,7 @@
 * Why low power design?  
 * CMOS recap for labs
 * Case Studies   
-## DAY2
-* Trepn Profiler   
+## DAY2 
 * Low Power Fundamentals   
 * Voltage Control Techniques   
 ## DAY3
