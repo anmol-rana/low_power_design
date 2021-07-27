@@ -1,19 +1,19 @@
 ![image](https://www.vlsisystemdesign.com/wp-content/uploads/2021/07/Flyerlatest-2048x686.png)
 # Table of Content
 ## DAY1
-* Why low power design?  
-  * Economics of Power/Energy
-  * Power vs Performance
-  * Portable vs Mobile vs Mobility
-  * Macro Prespective, EVS, Powergrids, ALtenate Energy
-* CMOS recap for labs
-  * Back to Basics, Resistors, Capacitors and Inductors
-  * MOS Transistors and CMOS
-  * CMOS operational region and 7 degree of Voltage control
-  * Range of Volatage controlled techniques
-* Case Studies   
-  * Reason of thermal runaway for samsung note 7 batteries
-  * Iphone 6 battery degradation
+* [Why low power design?](https://github.com/anmol-rana/low_power_design/#why-low-power-design)
+  * [Economics of Power/Energy](https://github.com/anmol-rana/low_power_design/#economics-of-powerenergy)
+  * [Power vs Performance](https://github.com/anmol-rana/low_power_design/#power-vs-performance)
+  * [Portable vs Mobile vs Mobility](https://github.com/anmol-rana/low_power_design/#portable-vs-mobile-vs-mobility)
+  * [Macro Prespective, EVS, Powergrids, ALtenate Energy](https://github.com/anmol-rana/low_power_design/#macro-prespective-evs-powergrids-altenate-energy)
+* [CMOS recap for labs](https://github.com/anmol-rana/low_power_design/#cmos-recaps)
+  * [Back to Basics, Resistors, Capacitors and Inductors](https://github.com/anmol-rana/low_power_design/#back-to-basics-resistors-capacitors-and-inductors)
+  * [MOS Transistors and CMOS](https://github.com/anmol-rana/low_power_design/#mos-transistors-and-cmos)
+  * [CMOS operational region and 7 degree of Voltage control](https://github.com/anmol-rana/low_power_design/#cmos-operational-region-and-7-degree-of-voltage-control)
+  * [Range of Volatage controlled techniques](https://github.com/anmol-rana/low_power_design/#range-of-volatage-controlled-techniques)
+* [Case Studies](https://github.com/anmol-rana/low_power_design/#case-studies-)   
+  * [Reason of thermal runaway for samsung note 7 batteries]()
+  * [Iphone 6 battery degradation]()
 ## DAY2  
 * Low Power Fundamentals 
   * Generic But Essential view of System and SOC
@@ -265,7 +265,7 @@ Applications where to use voltage controlled techniques.
 
 ## CASE Studies:-
 
-**Reason of thermal runaway for samsung note 7 batteries**
+### Reason of thermal runaway for samsung note 7 batteries
 
 Samsung used batteries from two parties one from samsung itself and another one from Amperex.
 
@@ -273,7 +273,7 @@ In samsung batteries, there was not gap between the internals and heat sealed pr
 
 In Amperex batteries, some cells were missing insulation tape and some cells having protrusions which leds to damage of the separator between the cathode and anode which results in short circuit. 
 
-**Iphone 6 battery degradation**
+### Iphone 6 battery degradation
 
 For Iphone 6, the company updated the software which kills the speed of the iphone and results in slowing down of the phone. The Apple says they have done this to preserve the battery life of ageing phone. Law suit is filed for this incident.
 
