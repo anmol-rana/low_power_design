@@ -12,57 +12,57 @@
   * [CMOS operational region and 7 degree of Voltage control](https://github.com/anmol-rana/low_power_design/#cmos-operational-region-and-7-degree-of-voltage-control)
   * [Range of Volatage controlled techniques](https://github.com/anmol-rana/low_power_design/#range-of-volatage-controlled-techniques)
 * [Case Studies](https://github.com/anmol-rana/low_power_design/#case-studies-)   
-  * [Reason of thermal runaway for samsung note 7 batteries]()
-  * [Iphone 6 battery degradation]()
+  * [Reason of thermal runaway for samsung note 7 batteries](https://github.com/anmol-rana/low_power_design/#reason-of-thermal-runaway-for-samsung-note-7-batteries)
+  * [Iphone 6 battery degradation](https://github.com/anmol-rana/low_power_design/#iphone-6-battery-degradation)
 ## DAY2  
-* Low Power Fundamentals 
-  * Generic But Essential view of System and SOC
-  * Power Consumption Breakdown
-  * Low Power design vs Power Management
-  * Density vs Delivery
-  * Reliability, Leakage and Lifetime.
-  * System Level Consideration  
-* Voltage Control Techniques   
-  * Range of voltage control techniques
-  * Power gating, Retention, DVS and Low-vdd standby
-  * State Retention and Verification
-  * State Retention techniques and UPF
+* [Low Power Fundamentals](https://github.com/anmol-rana/low_power_design/#low-power-fundamentals) 
+  * [Generic But Essential view of System and SOC](https://github.com/anmol-rana/low_power_design/#generic-but-essential-view-of--system-and-soc)
+  * [Power Consumption Breakdown](https://github.com/anmol-rana/low_power_design/#power-consumption-breakdown)
+  * [Low Power design vs Power Management](https://github.com/anmol-rana/low_power_design/#low-power-design-vs-power-management)
+  * [Density vs Delivery](https://github.com/anmol-rana/low_power_design/#density-vs-delivery)
+  * [Reliability, Leakage and Lifetime.](https://github.com/anmol-rana/low_power_design/#reliability-leakage-and-lifetime)
+  * [System Level Consideration](https://github.com/anmol-rana/low_power_design/#system-level-consideration)  
+* [Voltage Control Techniques](https://github.com/anmol-rana/low_power_design/#voltage-control-techniques)   
+  * [Range of voltage control techniques](https://github.com/anmol-rana/low_power_design/#range-of-voltage-control-techniques)
+  * [Power gating, Retention, DVS and Low-vdd standby](https://github.com/anmol-rana/low_power_design/#power-gating-retention-dvs-and-low-vdd-standby)
+  * [State Retention and Verification](https://github.com/anmol-rana/low_power_design/#state-retention-and-verification)
+  * [State Retention techniques and UPF](https://github.com/anmol-rana/low_power_design/#state-retention-techniques-and-upf)
 ## DAY3
-* Deep Dive into State Space 
-  * Power state, state transition and state space verification
-  * Elements of low power testbench
-  * Basics of Island Ordering    
-* Basic multi-voltage terminology
-  * Fundamentals of Rails, Multi-vdd and Island
-  * Fundamentals of domain, well and MTCMOS power gating.
-  * Isolations and LKGS -avoid latches, avoid respin
-  * Parking, Level shifters and SRPG(State tetention power gating)    
+* [Deep Dive into State Space](https://github.com/anmol-rana/low_power_design/#deep-dive-into-state-space) 
+  * [Power state, state transition and state space verification](https://github.com/anmol-rana/low_power_design/#power-state-state-transition-and-state-space-verification)
+  * [Elements of low power testbench](https://github.com/anmol-rana/low_power_design/#elements-of-low-power-testbench)
+  * [Basics of Island Ordering](https://github.com/anmol-rana/low_power_design/#basics-of-island-ordering)    
+* [Basic multi-voltage terminology](https://github.com/anmol-rana/low_power_design/#basic-multivoltage-terminology)
+  * [Fundamentals of Rails, Multi-vdd and Island](https://github.com/anmol-rana/low_power_design/#fundamentals-of-rails-multi-vdd-and-island)
+  * [Fundamentals of domain, well and MTCMOS power gating.](https://github.com/anmol-rana/low_power_design/#fundamentals-of-domain-well-and-mtcmos-power-gating)
+  * [Isolations and LKGS -avoid latches, avoid respin](https://github.com/anmol-rana/low_power_design/#isolations-and-lkgs--avoid-latches-avoid-respin)
+  * [Parking, Level shifters and SRPG(State tetention power gating)](https://github.com/anmol-rana/low_power_design/#parking-level-shifters-and-srpgstate-tetention-power-gating)    
 ## DAY4
-* Volatage aware booleans    
-  * Introduction to CMOS stages and Voltage aware booleans
-  * Multi Voltage case study with ngspice labs
-  * Example of core to pad multi voltage domain
-  * Labs
-* Power management and typical errors
-  * Common Power Management Schemes on ARM based SOC's
-  * Structural and Control Errors
-  * Voltage Scheduling Premature writes and Off Island Wakeup
-  * Conflicting Events, Bad Transitions and Intermediate states
-  * Unplanned state, Premature write and Multiple cpu    
-* Verifcation Strategies of MV designs     
-  * Low Power Management Verification
-  * Multi Voltage Coverage and Temporal Checks.
+* [Volatage aware booleans](https://github.com/anmol-rana/low_power_design/#voltage-aware-booleans)    
+  * [Introduction to CMOS stages and Voltage aware booleans](https://github.com/anmol-rana/low_power_design/#introduction-to-cmos-stages-and-voltage-aware-booleans)
+  * [Multi Voltage case study with ngspice labs](https://github.com/anmol-rana/low_power_design/#multi-voltage-case-study-with-ngspice-labs)
+  * [Example of core to pad multi voltage domain](https://github.com/anmol-rana/low_power_design/#example-of-core-to-pad-multi-voltage-domain)
+  * [Labs](https://github.com/anmol-rana/low_power_design/#labs)
+* [Power management and typical errors](https://github.com/anmol-rana/low_power_design/#power-management-and-typical-errors)
+  * [Common Power Management Schemes on ARM based SOC's](https://github.com/anmol-rana/low_power_design/#common-power-management-schemes-on-arm-based-socs)
+  * [Structural and Control Errors](https://github.com/anmol-rana/low_power_design/#structural-and-control-errors)
+  * [Voltage Scheduling Premature writes and Off Island Wakeup](https://github.com/anmol-rana/low_power_design/#voltage-scheduling-premature-writes-and-off-island-wakeup)
+  * [Conflicting Events, Bad Transitions and Intermediate states](https://github.com/anmol-rana/low_power_design/#conflicting-events-bad-transitions-and-intermediate-states)
+  * [Unplanned state, Premature write and Multiple CPU](https://github.com/anmol-rana/low_power_design/#unplanned-state-premature-write-and-multiple-cpu)    
+* [Verifcation Strategies of MV designs](https://github.com/anmol-rana/low_power_design/#verification-strategies-of-mv-designs)     
+  * [Low Power Management Verification](https://github.com/anmol-rana/low_power_design/#low-power-management-verification)
+  * [Multi Voltage Coverage and Temporal Checks.](https://github.com/anmol-rana/low_power_design/#multi-voltage-coverage-and-temporal-checks)
 ## DAY5
-* Island Ordering  
-  * Introduction to Island ordering
-  * Principle of Island Ordering and Reasons for deadlock
-  * Off Island Wakeup and Extension of island ordering
-  * Disjoint Island
-* Mobile and Mobility
-  * Introduction to mobile and mobility
-  * Infrastructure Needed for Mobility
-  * Mobile Transformtion 2005-2015
-  * Next Gen Mobile   
+* [Island Ordering](https://github.com/anmol-rana/low_power_design/#island-ordering)
+  * [Introduction to Island ordering]()
+  * [Principle of Island Ordering and Reasons for deadlock](https://github.com/anmol-rana/low_power_design/#principle-of-island-ordering-and-reasons-for-deadlock)
+  * [Off Island Wakeup and Extension of island ordering](https://github.com/anmol-rana/low_power_design/#off-island-wakeup)
+  * [Disjoint Island](https://github.com/anmol-rana/low_power_design/#disjoint-island)
+* [Mobile and Mobility](https://github.com/anmol-rana/low_power_design/#mobile-and-mobility)
+  * [Introduction to mobile and mobility](https://github.com/anmol-rana/low_power_design/#introduction-to-mobile-and-mobility)
+  * [Infrastructure Needed for Mobility](https://github.com/anmol-rana/low_power_design/#infrastructure-needed-for-mobility)
+  * [Mobile Transformtion 2005-2015](https://github.com/anmol-rana/low_power_design/#mobile-transformtion-2005-2015)
+  * [Next Gen Mobile](https://github.com/anmol-rana/low_power_design/#next-gen-mobile)   
 
 # DAY1
 
@@ -672,7 +672,7 @@ To retain the values of the logic when it is switched off, shadow latches are us
 
 # DAY4
 
-## Voltage aware booleans
+## Voltage Aware Booleans
 
 ### Introduction to CMOS stages and Voltage aware booleans
 
@@ -682,7 +682,7 @@ To retain the values of the logic when it is switched off, shadow latches are us
 2. When Vin = vth, the pmos will going from active region to saturation and nmos from off state to saturation. Ouput is unknown. Also results in high leakeage current.      
 3. when VIn = 1, the pmos is off and nmos is on, output is vout.
 
-"Voltage Aware Boolean"
+**Voltage Aware Boolean**
 
 ![ex1](https://user-images.githubusercontent.com/86521351/126794645-fdae4e68-f12b-4455-897b-3ec39393d2a2.PNG)
 
@@ -911,7 +911,7 @@ In this scenario, block detected  thermal overheat(with help of thermal diode pr
 In this scenario, P1 and P2 are the desired transitions with P1 state at  v1 == v2 and p2  at v2 >= v1. The v2 switches fast and v1 switches slow. So a third intermediate state is develop where P1> P2 which is not required.  To avoid this kind of issue, do not simultaneously change power rails or transition the v2 first than the v1.   
 
 
-### Unplanned state, Premature write and Multiple cpu
+### Unplanned state, Premature write and Multiple CPU
 
 **Unplanned State**
 
@@ -973,6 +973,8 @@ Typical verification flow for low power.
 # DAY5
 
 ## Island Ordering
+
+### Introduction to Island ordering
 
 * Mathematical concept of spatial and temporal dependencies.
 * Imposes restrictions on spatial cconnectivity based on temporal states or vice versa.
